@@ -1,31 +1,56 @@
+# version: 0.2
+# env:
+#   variables:
+#     S3_BUCKET: "{{s3_bucket_url}}"
+# phases:
+#   install:
+#     runtime-versions:
+#       nodejs: 16
+#   pre_build:
+#     commands:
+#       - echo Installing source NPM dependencies...
+#       - npm install
+#       - npm install -g @angular/cli
+#   build:
+#     commands:
+#       - echo Build started on `date`
+#       - ng build --configuration production --aot
+#   post_build:
+#      commands:
+#       # - aws s3 cp dist s3://${S3_BUCKET} --recursive
+#       # - echo Build completed on `date`
+#       # Clear S3 bucket.
+#             # - aws s3 rm s3://angularawsankurfree --recursive
+#             # - echo S3 bucket is cleared.
+#             - aws s3 cp dist/new-ang-aws s3://angularawsankurfree --recursive
+#             - echo Build completed on `date`
+# artifacts:
+#   files:
+#       - '**/*'
+#   base-directory: 'dist/new-ang-aws'
+#   discard-paths: yes
+
 version: 0.2
+
 env:
-  variables:
-    S3_BUCKET: "angularawsankurfree"
+    variables:
+        CACHE_CONTROL: "86400"
+        S3_BUCKET: "{{s3_bucket_url}}"
+        BUILD_FOLDER: "dist"
 phases:
   install:
     runtime-versions:
-      nodejs: 16
-  pre_build:
+        nodejs: 16
     commands:
-      - echo Installing source NPM dependencies...
-      - npm install
-      - npm install -g @angular/cli
+        - echo Installing source NPM dependencies...
+        - npm install
+        - npm install -g @angular/cli
   build:
     commands:
-      - echo Build started on `date`
-      - ng build --configuration production --aot
-  post_build:
-     commands:
-      # - aws s3 cp dist s3://${S3_BUCKET} --recursive
-      # - echo Build completed on `date`
-      # Clear S3 bucket.
-            # - aws s3 rm s3://angularawsankurfree --recursive
-            # - echo S3 bucket is cleared.
-            - aws s3 cp dist/new-ang-aws s3://angularawsankurfree --recursive
-            - echo Build completed on `date`
+        - echo Build started 
+        - ng build
 artifacts:
-  files:
-      - '**/*'
-  base-directory: 'dist/new-ang-aws'
-  discard-paths: yes
+    files:
+        - '**/*'
+    base-directory: 'dist*'
+    discard-paths: yes
